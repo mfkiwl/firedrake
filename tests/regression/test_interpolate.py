@@ -413,3 +413,34 @@ def test_interpolate_periodic_coords_max():
     # All nodes on the "seam" end up being 1, not 0.
     assert np.allclose(np.unique(continuous.dat.data_ro),
                        [0.25, 0.5, 0.75, 1])
+
+
+def test_basic_dual_eval_newel():
+    mesh = UnitIntervalMesh(1)
+    V = FunctionSpace(mesh, "NewElement", 3)
+    x = SpatialCoordinate(mesh)
+    expr = Constant(1.)
+    f = interpolate(expr, V)
+    import pdb; pdb.set_trace()
+    expr = x[0]
+    f = interpolate(expr, V)
+
+
+def test_basic_dual_eval_cg3():
+    mesh = UnitIntervalMesh(1)
+    V = FunctionSpace(mesh, "CG", 3)
+    x = SpatialCoordinate(mesh)
+    expr = Constant(1.)
+    f = interpolate(expr, V)
+    expr = x[0]**3
+    f = interpolate(expr, V)
+
+
+def test_basic_dual_eval_bdm():
+    mesh = UnitSquareMesh(1, 1)
+    V = FunctionSpace(mesh, "BDM", 6)
+    x = SpatialCoordinate(mesh)
+    expr = as_vector([Constant(1.), Constant(1.)])
+    f = interpolate(expr, V)
+    expr = x # x[0]**3 + x[1]**3
+    f = interpolate(expr, V)
