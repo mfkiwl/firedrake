@@ -421,13 +421,17 @@ def test_basic_dual_eval_c0modified():
     x = SpatialCoordinate(mesh)
     expr = Constant(1.)
     f = interpolate(expr, V)
-    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [1, 1, 1, 1/2])
+    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [node(expr) for node in f.function_space().finat_element.fiat_equivalent.dual_basis()])
     expr = x[0]
+    # Account for cell and corresponding expression being flipped onto
+    # reference cell before reaching FIAT
+    expr_fiat = 1-x[0]
     f = interpolate(expr, V)
-    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [0, 1, 1/2, 1/3])
+    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [node(expr_fiat) for node in f.function_space().finat_element.fiat_equivalent.dual_basis()])
     expr = x[0]**2
+    expr_fiat = (1-x[0])**2
     f = interpolate(expr, V)
-    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [0, 1, 1/3, 1/4])
+    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [node(expr_fiat) for node in f.function_space().finat_element.fiat_equivalent.dual_basis()])
 
 
 def test_basic_dual_eval_cg3():
