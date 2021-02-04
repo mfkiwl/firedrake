@@ -415,15 +415,19 @@ def test_interpolate_periodic_coords_max():
                        [0.25, 0.5, 0.75, 1])
 
 
-def test_basic_dual_eval_newel():
+def test_basic_dual_eval_c0modified():
     mesh = UnitIntervalMesh(1)
-    V = FunctionSpace(mesh, "NewElement", 3)
+    V = FunctionSpace(mesh, "C0 Modified", 3)
     x = SpatialCoordinate(mesh)
     expr = Constant(1.)
     f = interpolate(expr, V)
-    import pdb; pdb.set_trace()
+    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [1, 1, 1, 1/2])
     expr = x[0]
     f = interpolate(expr, V)
+    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [0, 1, 1/2, 1/3])
+    expr = x[0]**2
+    f = interpolate(expr, V)
+    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [0, 1, 1/3, 1/4])
 
 
 def test_basic_dual_eval_cg3():
