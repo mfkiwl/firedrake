@@ -440,12 +440,17 @@ def test_basic_dual_eval_cg3():
     x = SpatialCoordinate(mesh)
     expr = Constant(1.)
     f = interpolate(expr, V)
+    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [node(expr) for node in f.function_space().finat_element.fiat_equivalent.dual_basis()])
     expr = x[0]**3
+    # Account for cell and corresponding expression being flipped onto
+    # reference cell before reaching FIAT
+    expr_fiat = (1-x[0])**3
     f = interpolate(expr, V)
+    assert np.allclose(f.dat.data_ro[f.cell_node_map().values], [node(expr_fiat) for node in f.function_space().finat_element.fiat_equivalent.dual_basis()])
 
 
 def test_basic_dual_eval_bdm():
-    mesh = UnitSquareMesh(1, 1)
+    mesh = UnitTriangleMesh()
     V = FunctionSpace(mesh, "BDM", 6)
     x = SpatialCoordinate(mesh)
     expr = as_vector([Constant(1.), Constant(1.)])
