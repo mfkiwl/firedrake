@@ -291,7 +291,7 @@ def test_interpolate_hessian_linear_expr():
     g = f.copy(deepcopy=True)
 
     dJdm = J.block_variable.tlm_value
-    Hm = f.original_block_variable.hessian_value.vector().inner(h.vector())
+    Hm = f.original_block_variable.hessian_value.inner(h.vector())
     # If the new interpolate block has the right hessian, taylor test
     # convergence rate should be as for the unmodified test.
     assert taylor_test(Jhat, g, h, dJdm=dJdm, Hm=Hm) > 2.9
@@ -347,7 +347,7 @@ def test_interpolate_hessian_nonlinear_expr():
     g = f.copy(deepcopy=True)
 
     dJdm = J.block_variable.tlm_value
-    Hm = f.original_block_variable.hessian_value.vector().inner(h.vector())
+    Hm = f.original_block_variable.hessian_value.inner(h.vector())
     # If the new interpolate block has the right hessian, taylor test
     # convergence rate should be as for the unmodified test.
     assert taylor_test(Jhat, g, h, dJdm=dJdm, Hm=Hm) > 2.9
@@ -407,7 +407,7 @@ def test_interpolate_hessian_nonlinear_expr_multi():
     g = f.copy(deepcopy=True)
 
     dJdm = J.block_variable.tlm_value
-    Hm = f.original_block_variable.hessian_value.vector().inner(h.vector())
+    Hm = f.original_block_variable.hessian_value.inner(h.vector())
     # If the new interpolate block has the right hessian, taylor test
     # convergence rate should be as for the unmodified test.
     assert taylor_test(Jhat, g, h, dJdm=dJdm, Hm=Hm) > 2.9
